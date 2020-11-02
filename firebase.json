@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "dist/angular-crash-todolist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
