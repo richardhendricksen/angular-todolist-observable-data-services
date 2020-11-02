@@ -32,60 +32,64 @@ export class TodoService {
     obs.subscribe(todos => {
         // update local collection
         this.localTodos = todos;
+
         // update subscribers
         this._todos.next(this.localTodos);
-      },
-      error => console.error('Could not load todos.'));
+      });
   }
 
   toggleCompleted(todo: Todo): void {
     // inverse completed status
     todo.completed = !todo.completed;
 
-    // update local collection
-    this.localTodos.map(t => {
-      if (t.id === todo.id) {
-        return todo;
-      }
-      return t;
-    });
-
     // call endpoint
     const url = `${this.baseUrl}/${todo.id}`;
     const obs = this.http.put<Todo>(url, todo, httpOptions);
 
-    // update subscribers
     obs.subscribe(
       () => {
+        // update local collection
+        this.localTodos.map(t => {
+          if (t.id === todo.id) {
+            return todo;
+          }
+          return t;
+        });
+
+        // update subscribers
         this._todos.next(this.localTodos);
       });
 
   }
 
   deleteTodo(todo: Todo): void {
-    // update local collection
-    this.localTodos = this.localTodos.filter(t => t.id !== todo.id);
 
     // call endpoint
     const url = `${this.baseUrl}/${todo.id}`;
     const obs = this.http.delete<Todo>(url, httpOptions);
 
-    // update subscribers
     obs.subscribe(
-      () => this._todos.next(this.localTodos)
+      () => {
+        // update local collection
+        this.localTodos = this.localTodos.filter(t => t.id !== todo.id);
+
+        // update subscribers
+        this._todos.next(this.localTodos);
+      }
     );
   }
 
   addTodo(todo: Todo): void {
-    // update local collection
-    this.localTodos.push(todo);
 
     // call endpoint
     const obs = this.http.post<Todo>(this.baseUrl, todo, httpOptions);
 
-    // update subscribers
     obs.subscribe(
       () => {
+        // update local collection
+        this.localTodos.push(todo);
+
+        // update subscribers
         this._todos.next(this.localTodos);
       });
   }
