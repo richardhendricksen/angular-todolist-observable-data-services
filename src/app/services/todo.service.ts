@@ -29,9 +29,10 @@ export class TodoService {
     // call endpoint
     const obs = this.http.get<Todo[]>(`${this.baseUrl}${this.limit}`);
 
-    // update subscribers
     obs.subscribe(todos => {
+        // update local collection
         this.localTodos = todos;
+        // update subscribers
         this._todos.next(this.localTodos);
       },
       error => console.error('Could not load todos.'));
