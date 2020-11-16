@@ -49,7 +49,7 @@ export class TodoService {
     obs.subscribe(
       () => {
         // update local collection
-        this.localTodos.map(t => {
+        this.localTodos = this.localTodos.map(t => {
           if (t.id === todo.id) {
             return todo;
           }
